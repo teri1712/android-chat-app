@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">
+            @color/white
+        </item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.SplashScreen">
+        <!-- Background color for the splash screen -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <!-- The drawable to show in the center (your app icon or animated drawable) -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <!-- The theme to apply after the splash screen -->
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
+</resources>
