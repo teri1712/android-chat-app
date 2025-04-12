@@ -1,12 +1,18 @@
-package com.decade.practice.model
+package com.decade.practice.view.viewmodel
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.decade.practice.model.ChatEvent
+import com.decade.practice.model.Conversation
+import com.decade.practice.model.IconEvent
+import com.decade.practice.model.ImageEvent
+import com.decade.practice.model.SeenEvent
+import com.decade.practice.model.TextEvent
+import com.decade.practice.model.isMessage
 import com.decade.practice.utils.formatRelativeTime
-import com.decade.practice.view.viewmodel.ListIndex
 import java.util.LinkedList
 
 @Stable

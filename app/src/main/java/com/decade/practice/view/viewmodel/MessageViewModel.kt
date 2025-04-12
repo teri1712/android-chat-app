@@ -6,16 +6,11 @@ import com.decade.practice.event.ApplicationEventListener
 import com.decade.practice.event.ListenableEventPublisher
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Message
 import com.decade.practice.model.Online
-import com.decade.practice.model.OwnerMessage
-import com.decade.practice.model.SendState
 import com.decade.practice.model.User
 import com.decade.practice.model.isMessage
-import com.decade.practice.model.toMessage
 import com.decade.practice.repository.MessageRepository
 import com.decade.practice.session.PersistentContext
-import com.decade.practice.utils.RollInFormater
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

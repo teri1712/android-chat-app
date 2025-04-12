@@ -8,13 +8,13 @@ import com.decade.practice.model.Conversation
 import com.decade.practice.model.IconEvent
 import com.decade.practice.model.ImageEvent
 import com.decade.practice.model.ImageSpec
-import com.decade.practice.model.Message
 import com.decade.practice.model.Online
-import com.decade.practice.model.OwnerMessage
-import com.decade.practice.model.PartnerMessage
 import com.decade.practice.model.TextEvent
 import com.decade.practice.model.User
 import com.decade.practice.utils.ONE_WEEK_MILLIS
+import com.decade.practice.view.viewmodel.Message
+import com.decade.practice.view.viewmodel.OwnerMessage
+import com.decade.practice.view.viewmodel.PartnerMessage
 import java.time.Instant
 import java.util.UUID
 

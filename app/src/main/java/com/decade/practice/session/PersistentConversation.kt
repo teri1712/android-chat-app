@@ -2,8 +2,8 @@ package com.decade.practice.session
 
 
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Message
 import com.decade.practice.model.Online
+import com.decade.practice.view.viewmodel.Message
 import kotlinx.coroutines.flow.StateFlow
 
 

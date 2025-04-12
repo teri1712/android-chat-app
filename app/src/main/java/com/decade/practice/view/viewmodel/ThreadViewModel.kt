@@ -12,8 +12,6 @@ import com.decade.practice.event.ApplicationEventListener
 import com.decade.practice.event.ListenableEventPublisher
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Dialog
-import com.decade.practice.model.Message
 import com.decade.practice.model.isMessage
 import com.decade.practice.repository.ConversationRepository
 import com.decade.practice.session.PersistentContext

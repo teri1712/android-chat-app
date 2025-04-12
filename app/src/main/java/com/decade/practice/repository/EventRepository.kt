@@ -7,10 +7,10 @@ import com.decade.practice.db.saveEvents
 import com.decade.practice.model.Chat
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Message
-import com.decade.practice.model.toMessages
 import com.decade.practice.net.HttpContext
 import com.decade.practice.net.api.eventCall
+import com.decade.practice.view.viewmodel.Message
+import com.decade.practice.view.viewmodel.toMessages
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

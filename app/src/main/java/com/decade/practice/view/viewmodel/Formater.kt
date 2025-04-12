@@ -1,7 +1,5 @@
-package com.decade.practice.utils
+package com.decade.practice.view.viewmodel
 
-import com.decade.practice.model.Message
-import com.decade.practice.model.Position
 import javax.inject.Inject
 
 interface Formater {

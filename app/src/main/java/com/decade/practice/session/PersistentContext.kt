@@ -6,13 +6,13 @@ import com.decade.practice.event.ListenableEventPublisher
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.ChatSnapshot
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Message
 import com.decade.practice.model.Online
 import com.decade.practice.model.User
-import com.decade.practice.model.toMessages
 import com.decade.practice.repository.ChatRepository
 import com.decade.practice.repository.EventRepository
 import com.decade.practice.repository.OnlineRepository
+import com.decade.practice.view.viewmodel.Message
+import com.decade.practice.view.viewmodel.toMessages
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

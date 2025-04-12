@@ -1,6 +1,7 @@
-package com.decade.practice.model
+package com.decade.practice.view.viewmodel
 
 import androidx.compose.runtime.Stable
+import com.decade.practice.model.Conversation
 
 @Stable
 interface Dialog {

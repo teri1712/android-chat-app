@@ -66,17 +66,17 @@ import coil.compose.AsyncImage
 import com.decade.practice.R
 import com.decade.practice.model.IconEvent
 import com.decade.practice.model.ImageEvent
-import com.decade.practice.model.Message
-import com.decade.practice.model.OwnerMessage
-import com.decade.practice.model.PartnerMessage
-import com.decade.practice.model.Position
-import com.decade.practice.model.SendState
 import com.decade.practice.model.TextEvent
 import com.decade.practice.model.User
 import com.decade.practice.model.placeHolder
-import com.decade.practice.utils.RollInFormater
 import com.decade.practice.utils.formatTime
 import com.decade.practice.view.theme.ApplicationTheme
+import com.decade.practice.view.viewmodel.Message
+import com.decade.practice.view.viewmodel.OwnerMessage
+import com.decade.practice.view.viewmodel.PartnerMessage
+import com.decade.practice.view.viewmodel.Position
+import com.decade.practice.view.viewmodel.RollInFormater
+import com.decade.practice.view.viewmodel.SendState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -1,5 +1,7 @@
 package com.decade.practice.model
 
+import com.decade.practice.view.viewmodel.Message
+
 data class ChatSnapshot(
     val conversation: Conversation,
     val eventList: MutableList<ChatEvent> = mutableListOf(),

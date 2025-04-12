@@ -42,14 +42,14 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.decade.practice.R
 import com.decade.practice.model.Conversation
-import com.decade.practice.model.Dialog
-import com.decade.practice.model.Message
 import com.decade.practice.model.User
-import com.decade.practice.model.announcementOf
 import com.decade.practice.utils.ONE_HOUR_SECONDS
 import com.decade.practice.utils.ONE_MINUTE_SECONDS
 import com.decade.practice.view.activity.ConversationRoute
 import com.decade.practice.view.theme.ApplicationTheme
+import com.decade.practice.view.viewmodel.Dialog
+import com.decade.practice.view.viewmodel.Message
+import com.decade.practice.view.viewmodel.announcementOf
 import java.time.Instant
 
 val LocalUser = compositionLocalOf { mockUser }
