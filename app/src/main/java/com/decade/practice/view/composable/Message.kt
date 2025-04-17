@@ -62,6 +62,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.decade.practice.R
 import com.decade.practice.model.IconEvent
@@ -70,6 +71,7 @@ import com.decade.practice.model.TextEvent
 import com.decade.practice.model.User
 import com.decade.practice.model.placeHolder
 import com.decade.practice.utils.formatTime
+import com.decade.practice.view.activity.ImageDialog
 import com.decade.practice.view.theme.ApplicationTheme
 import com.decade.practice.view.viewmodel.Message
 import com.decade.practice.view.viewmodel.OwnerMessage
@@ -347,6 +349,8 @@ fun IconMessage(iconEvent: IconEvent) {
 @Composable
 fun ImageMessage(image: ImageEvent) {
 
+    val uri = remember { image.uri.toUri() }
+    var dialogOpen by remember { mutableStateOf(false) }
     val width = image.width
     val height = image.height
     val density = LocalDensity.current
@@ -356,7 +360,7 @@ fun ImageMessage(image: ImageEvent) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     AsyncImage(
-        model = image.uri,
+        model = uri,
         placeholder = BitmapPainter(placeHolder(width, height).asImageBitmap()),
         contentDescription = "Image",
         contentScale = ContentScale.Crop,
@@ -364,8 +368,16 @@ fun ImageMessage(image: ImageEvent) {
             .heightIn(min = 200.dp, max = 250.dp)
             .widthIn(min = 200.dp, max = (screenWidth * 7 / 10))
             .size(width = widthDp, height = heightDp)
-
+            .clickable {
+                dialogOpen = true
+            }
     )
+    if (dialogOpen) {
+        ImageDialog(image.imageSpec, onDismissRequest = {
+            dialogOpen = false
+        }
+        )
+    }
 }
 
 @Composable
@@ -524,3 +536,4 @@ fun MessagePreview() {
         MessageList(messageList = messageList, typing = typing)
     }
 }
+

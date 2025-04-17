@@ -1,5 +1,6 @@
 package com.decade.practice.view.composable
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
@@ -120,6 +122,7 @@ fun Conversation(
 
 @Composable
 private fun SideAvatar(partner: User) {
+    Toast.makeText(LocalContext.current, partner.avatar.uri, Toast.LENGTH_LONG).show()
     AsyncImage(
         model = partner.avatar.uri,
         placeholder = painterResource(id = R.drawable.avatar_placeholder),

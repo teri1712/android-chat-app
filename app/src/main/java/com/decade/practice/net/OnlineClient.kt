@@ -6,14 +6,14 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import com.decade.practice.session.AccountComponent
-import com.decade.practice.session.AccountLifecycle
-import com.decade.practice.session.AccountScope
-import com.decade.practice.message.INBOUND_CHANNEL
+import com.decade.practice.components.INBOUND_CHANNEL
 import com.decade.practice.message.MessageQueue
 import com.decade.practice.model.Chat
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.TypeEvent
+import com.decade.practice.session.AccountComponent
+import com.decade.practice.session.AccountLifecycle
+import com.decade.practice.session.AccountScope
 import com.google.gson.Gson
 import dagger.Binds
 import dagger.Module
@@ -104,7 +104,7 @@ class OnlineClient @Inject constructor(
     private fun connect() {
         val stompClient = Stomp.over(
             Stomp.ConnectionProvider.OKHTTP,
-            "ws://192.168.1.6:8080/handshake",
+            "ws://192.168.3.104:8080/handshake",
             null,
             httpContext.client
         )
@@ -126,7 +126,7 @@ class OnlineClient @Inject constructor(
 
                 }
             }
-        val eventQueue = stompClient.topic("/user/queue")
+        val eventQueue = stompClient.topic("/user/queue/message")
             .map { message: StompMessage -> gson.fromJson(message.payload, ChatEvent::class.java) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ chatEvent: ChatEvent ->

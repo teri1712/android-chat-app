@@ -42,7 +42,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 
-const val SERVER: String = "http://192.168.1.6:8080/"
+const val SERVER: String = "http://192.168.3.104:8080/"
 
 @HiltAndroidApp
 class MainApplication : Application(), Configuration.Provider {
@@ -161,9 +161,7 @@ fun Context.cacheFile(uri: Uri): File {
     if (!cacheDir.exists()) {
         cacheDir.mkdir()
     }
-
     val tempFile = File(cacheDir, UUID.randomUUID().toString())
-
     contentResolver.openInputStream(uri)?.use { fis ->
         FileOutputStream(tempFile).use { fos ->
             fis.copyTo(fos)

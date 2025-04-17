@@ -23,7 +23,7 @@ val mockUser = User(
     "Luffy",
     "Monkey D Luffy",
     "Male",
-    ImageSpec("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPqn67k230n8waDkEoB51rcqoSR6aCf-maRg&s", 100, 100),
+    ImageSpec("", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPqn67k230n8waDkEoB51rcqoSR6aCf-maRg&s", 100, 100),
     "User"
 )
 
@@ -32,7 +32,7 @@ fun mockPartner() = User(
     "Nami",
     "Nami",
     "Female",
-    ImageSpec("https://i.pinimg.com/736x/f9/ad/59/f9ad59d7c345d7066593d1471999d18d.jpg", 100, 100),
+    ImageSpec("", "https://i.pinimg.com/736x/f9/ad/59/f9ad59d7c345d7066593d1471999d18d.jpg", 100, 100),
     "ROLE_USER"
 )
 
@@ -74,7 +74,7 @@ fun mockIconMessage(conversation: Conversation, mine: Boolean = false): Message 
 }
 
 fun mockImageMessage(conversation: Conversation, mine: Boolean = false): Message {
-    val imageEvent = ImageEvent(ImageSpec("https://i.pinimg.com/736x/92/90/4f/92904fb81b692e508efa3dfe55190829.jpg", 500, 500))
+    val imageEvent = ImageEvent(ImageSpec("", "https://i.pinimg.com/736x/92/90/4f/92904fb81b692e508efa3dfe55190829.jpg", 500, 500))
     val chatEvent =
         ChatEvent(
             conversation.identifier,

@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.compose.runtime.Immutable
-import com.decade.practice.session.AccountScope
 import com.decade.practice.message.MessageQueue
-import com.decade.practice.message.OUTBOUND_CHANNEL
 import com.decade.practice.model.ChatEvent
 import com.decade.practice.model.Conversation
 import com.decade.practice.model.IconEvent
@@ -14,6 +12,7 @@ import com.decade.practice.model.ImageEvent
 import com.decade.practice.model.ImageSpec
 import com.decade.practice.model.SeenEvent
 import com.decade.practice.model.TextEvent
+import com.decade.practice.session.AccountScope
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -63,7 +62,7 @@ class MessageService @Inject constructor(
         val event = ChatEvent(
             chatIdentifier = conversation.identifier,
             sender = conversation.owner.id,
-            imageEvent = ImageEvent(ImageSpec(uri.toString(), bitmap.width, bitmap.height))
+            imageEvent = ImageEvent(ImageSpec("", uri.toString(), bitmap.width, bitmap.height))
         )
         event.conversation = conversation
         queue.enqueue(event)

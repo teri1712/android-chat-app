@@ -7,11 +7,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MainApplication"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,34 +20,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".service.DownloadService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
-            android:theme="@style/SplashTheme"
             android:name=".view.activity.ThreadActivity"
+            android:exported="true"
             android:launchMode="singleTop"
-            android:exported="true">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <!--        <provider-->
-        <!--            android:name="androidx.startup.InitializationProvider"-->
-        <!--            android:authorities="${applicationId}.androidx-startup"-->
-        <!--            android:exported="false"-->
-        <!--            tools:node="merge">-->
-        <!--            &lt;!&ndash; If you are using androidx.startup to initialize other components &ndash;&gt;-->
-        <!--            <meta-data-->
-        <!--                android:name="androidx.work.WorkManagerInitializer"-->
-        <!--                android:value="androidx.startup"-->
-        <!--                tools:node="remove" />-->
-        <!--        </provider>-->
     </application>
+
 </manifest>

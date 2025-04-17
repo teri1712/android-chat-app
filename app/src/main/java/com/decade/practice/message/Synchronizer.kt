@@ -14,11 +14,10 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.await
 import androidx.work.hasKeyWithValueOfType
-import com.decade.practice.session.AccountComponent
-import com.decade.practice.session.AccountLifecycle
-import com.decade.practice.session.AccountScope
 import com.decade.practice.authentication.UnAuthorizedEvent
 import com.decade.practice.cacheFile
+import com.decade.practice.components.INBOUND_CHANNEL
+import com.decade.practice.components.OUTBOUND_CHANNEL
 import com.decade.practice.db.AccountDatabase
 import com.decade.practice.db.dao.EventDao
 import com.decade.practice.db.dao.edgeFrom
@@ -41,6 +40,9 @@ import com.decade.practice.model.isMessage
 import com.decade.practice.net.HttpContext
 import com.decade.practice.net.api.eventCall
 import com.decade.practice.retrofit
+import com.decade.practice.session.AccountComponent
+import com.decade.practice.session.AccountLifecycle
+import com.decade.practice.session.AccountScope
 import com.google.gson.Gson
 import dagger.Binds
 import dagger.Module

@@ -25,8 +25,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 fun testConversation(first: String, second: String): Conversation {
-    val owner = User(UUID.nameUUIDFromBytes(first.toByteArray()).toString(), first, avatar = ImageSpec("", 100, 100))
-    val partner = User(UUID.nameUUIDFromBytes(second.toByteArray()).toString(), second, avatar = ImageSpec("", 100, 100))
+    val owner = User(UUID.nameUUIDFromBytes(first.toByteArray()).toString(), first, avatar = ImageSpec("", "", 100, 100))
+    val partner = User(UUID.nameUUIDFromBytes(second.toByteArray()).toString(), second, avatar = ImageSpec("", "", 100, 100))
     val chat = Chat(ChatIdentifier.from(owner, partner), owner)
     return Conversation(chat, partner, owner)
 }

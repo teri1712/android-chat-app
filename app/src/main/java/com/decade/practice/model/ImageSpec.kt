@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 @Immutable
 
 data class ImageSpec(
+    val filename: String,
     val uri: String,
     val width: Int,
     val height: Int,

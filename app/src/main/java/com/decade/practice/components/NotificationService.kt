@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Path
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
@@ -20,6 +21,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.decade.practice.R
 import com.decade.practice.event.ApplicationEvent
 import com.decade.practice.event.ApplicationEventListener
@@ -52,7 +55,7 @@ private const val NOTIFICATION_ID = 666
 @Singleton
 class NotificationService @Inject constructor(
     private val applicationContext: Application,
-    private val picassoProvider: PicassoProvider,
+    private val imageProvider: ImageProvider,
 ) : ApplicationEventListener {
 
     private var isOnForeGround: Boolean = false
@@ -126,14 +129,36 @@ class NotificationService @Inject constructor(
             return
         mainScope.launch {
             val sender = event.partner
+            val uri = sender.avatar.uri.toUri()
+            val imageRequest = ImageRequest.Builder(applicationContext)
+                .data(uri)
+                .build()
+
             val message = event.textEvent?.content ?: (sender.name + "has sent you an image")
-            val picasso = picassoProvider.get()
+            val imageLoader = imageProvider.loader
             val avatar = withContext(Dispatchers.IO) {
-                picasso.load(sender.avatar.uri.toUri()).get().crop()
+                val result = imageLoader.execute(imageRequest)
+                if (result !is SuccessResult)
+                    return@withContext null
+
+                val drawable = result.drawable
+                if (drawable is BitmapDrawable)
+                    return@withContext drawable.bitmap
+                val width = drawable.intrinsicWidth
+                val height = drawable.intrinsicHeight
+
+                val bitmap = createBitmap(width, height)
+                val canvas = Canvas(bitmap)
+
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+
+                return@withContext bitmap
+
             }
             val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.message_icon)
-                .setLargeIcon(avatar)
+                .setLargeIcon(avatar?.crop())
                 .setContentTitle(sender.name)
                 .setContentText(message)
                 .setContentIntent(tapAction(event.conversation))

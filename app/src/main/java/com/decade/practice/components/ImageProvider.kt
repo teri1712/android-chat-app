@@ -1,38 +1,47 @@
 package com.decade.practice.components
 
 import android.content.Context
+import coil.Coil
+import coil.ImageLoader
 import com.decade.practice.authentication.AuthenticationEvent
 import com.decade.practice.authentication.LoginEvent
 import com.decade.practice.authentication.LogoutEvent
 import com.decade.practice.event.ApplicationEvent
 import com.decade.practice.event.ApplicationEventListener
 import com.decade.practice.net.HttpContext
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
+import com.decade.practice.net.api.imageCall
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import okhttp3.Cache
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
 import java.io.File
-import java.util.concurrent.ExecutorService
+import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
-interface PicassoProvider {
-    fun get(): Picasso
+interface ImageProvider {
+    suspend fun load(filename: String): InputStream
+    val loader: ImageLoader
 }
 
 @Singleton
-class PicassoInitializer @Inject constructor(
+class ImageInitializer @Inject constructor(
     private val context: Context,
-    private val executor: ExecutorService
-) : ApplicationEventListener, PicassoProvider {
+    private val defaultClient: OkHttpClient,
+    private val defaultRetrofit: Retrofit
+) : ApplicationEventListener, ImageProvider {
 
     private val cache = File(context.cacheDir, "images")
-    private lateinit var picasso: Picasso
+    private val defaultLoader = ImageLoader.Builder(context)
+        .okHttpClient { defaultClient }
+        .build()
+    private var imageLoader = defaultLoader
+    private var retrofit: Retrofit = defaultRetrofit
 
     init {
         if (!cache.exists() && !cache.mkdir()) {
@@ -40,7 +49,10 @@ class PicassoInitializer @Inject constructor(
         }
     }
 
-    override fun get(): Picasso = picasso
+    override suspend fun load(filename: String): InputStream = retrofit.imageCall().download(filename).byteStream()
+
+    override val loader: ImageLoader
+        get() = imageLoader
 
     override fun supportsEventType(eventType: Class<out ApplicationEvent>): Boolean {
         return AuthenticationEvent::class.java.isAssignableFrom(eventType)
@@ -49,16 +61,18 @@ class PicassoInitializer @Inject constructor(
     override suspend fun onApplicationEvent(applicationEvent: ApplicationEvent) {
         if (applicationEvent is LoginEvent) {
             val httpContext: HttpContext = applicationEvent.session.httpContext
-            val sharedPool = httpContext.client.newBuilder()
+            val httpClient = httpContext.client.newBuilder()
                 .cache(Cache(cache, (100 * 1024 * 1024).toLong()))
                 .build()
-            picasso = Picasso.Builder(context)
-                .executor(executor)
-                .downloader(OkHttp3Downloader(sharedPool))
+            imageLoader = ImageLoader.Builder(context)
+                .okHttpClient { httpClient }
                 .build()
+            retrofit = httpContext.retrofit
         } else if (applicationEvent is LogoutEvent) {
-            picasso = Picasso.get()
+            imageLoader = defaultLoader
+            retrofit = defaultRetrofit
         }
+        Coil.setImageLoader(imageLoader)
     }
 
 }
@@ -68,10 +82,10 @@ class PicassoInitializer @Inject constructor(
 internal abstract class PicassoModule {
 
     @Binds
-    abstract fun picassoProvider(picasso: PicassoInitializer): PicassoProvider
+    abstract fun picassoProvider(picasso: ImageInitializer): ImageProvider
 
     @Binds
     @IntoSet
-    abstract fun applicationEventListener(picasso: PicassoInitializer): ApplicationEventListener
+    abstract fun applicationEventListener(picasso: ImageInitializer): ApplicationEventListener
 
 }
