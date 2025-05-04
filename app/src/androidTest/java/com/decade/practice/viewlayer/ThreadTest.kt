@@ -1,8 +1,8 @@
 package com.decade.practice.viewlayer
 
 import androidx.test.core.app.ActivityScenario
-import com.decade.practice.repository.AccountRepository
-import com.decade.practice.view.activity.ThreadActivity
+import com.decade.practice.activity.ThreadActivity
+import com.decade.practice.session.AccountRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
@@ -16,29 +16,29 @@ import javax.inject.Inject
 @HiltAndroidTest
 class ThreadTest {
 
-    @Inject
-    lateinit var accountRepository: AccountRepository
+      @Inject
+      lateinit var accountRepository: AccountRepository
 
-    @get:Rule
-    val hiltRule = HiltAndroidRule(this)
+      @get:Rule
+      val hiltRule = HiltAndroidRule(this)
 
 
-    @Before
-    fun setUp() = runBlocking(Dispatchers.Main) {
-        hiltRule.inject()
-        accountRepository.logIn("Luffy", "Luffy")
-        return@runBlocking
-    }
+      @Before
+      fun setUp() = runBlocking(Dispatchers.Main) {
+            hiltRule.inject()
+            accountRepository.logIn("Luffy", "Luffy")
+            return@runBlocking
+      }
 
-    @After
-    fun tearDown() = runBlocking(Dispatchers.Main) {
-        accountRepository.logOut()
-    }
+      @After
+      fun tearDown() = runBlocking(Dispatchers.Main) {
+            accountRepository.logOut()
+      }
 
-    @Test
-    fun testThreadView() {
-        val scenario = ActivityScenario.launch(ThreadActivity::class.java)
-        Thread.sleep(15 * 60 * 1000)
-        scenario.close()
-    }
+      @Test
+      fun testThreadView() {
+            val scenario = ActivityScenario.launch(ThreadActivity::class.java)
+            Thread.sleep(15 * 60 * 1000)
+            scenario.close()
+      }
 }

@@ -1,7 +1,7 @@
 package com.decade.practice.session
 
-import com.decade.practice.db.AccountDatabase
-import com.decade.practice.model.User
+import com.decade.practice.database.AccountDatabase
+import com.decade.practice.model.domain.User
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
@@ -20,10 +20,10 @@ interface AccountComponent
 @DefineComponent.Builder
 interface AccountComponentBuilder {
 
-    fun account(@BindsInstance account: User): AccountComponentBuilder
-    fun database(@BindsInstance database: AccountDatabase): AccountComponentBuilder
+      fun account(@BindsInstance account: User): AccountComponentBuilder
+      fun database(@BindsInstance database: AccountDatabase): AccountComponentBuilder
 
-    fun build(): AccountComponent
+      fun build(): AccountComponent
 }
 
 fun AccountComponentBuilder.createSession(account: User, database: AccountDatabase) = account(account).database(database).build().getSession()
@@ -32,19 +32,19 @@ fun AccountComponentBuilder.createSession(account: User, database: AccountDataba
 @EntryPoint
 @InstallIn(AccountComponent::class)
 internal interface AccountEntryPoint {
-    fun session(): AccountSession
+      fun session(): AccountSession
 }
 
 @Module
 @InstallIn(AccountComponent::class)
 internal object AccountModule {
 
-    @AccountScope
-    @Provides
-    fun coroutineScope() = MainScope()
+      @AccountScope
+      @Provides
+      fun coroutineScope() = MainScope()
 }
 
 
 fun AccountComponent.getSession(): AccountSession {
-    return EntryPoints.get(this, AccountEntryPoint::class.java).session()
+      return EntryPoints.get(this, AccountEntryPoint::class.java).session()
 }

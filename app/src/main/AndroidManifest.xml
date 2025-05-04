@@ -28,11 +28,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".view.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".view.activity.ThreadActivity"
+            android:name=".activity.ThreadActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/SplashTheme">

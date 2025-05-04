@@ -7,13 +7,10 @@ import android.net.Uri
 import androidx.room.Room.databaseBuilder
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Configuration
-import com.decade.practice.components.JobDelay
-import com.decade.practice.components.NetworkJobDelay
-import com.decade.practice.components.SHARED_PREFERENCES_NAME
-import com.decade.practice.db.AccountDatabase
+import com.decade.practice.database.AccountDatabase
 import com.decade.practice.event.ApplicationEventPublisher
-import com.decade.practice.repository.AccountRepository
 import com.decade.practice.session.AccountManager
+import com.decade.practice.session.AccountRepository
 import com.decade.practice.session.Session
 import com.google.gson.Gson
 import dagger.Binds
@@ -47,24 +44,24 @@ const val SERVER: String = "http://192.168.3.104:8080/"
 @HiltAndroidApp
 class MainApplication : Application(), Configuration.Provider {
 
-    override fun onCreate() {
-        super.onCreate()
-        val debugMode = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        if (debugMode) {
-            getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit()
-            databaseList().forEach { dbName ->
-                deleteDatabase(dbName)
+      override fun onCreate() {
+            super.onCreate()
+            val debugMode = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+            if (debugMode) {
+                  getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit()
+                  databaseList().forEach { dbName ->
+                        deleteDatabase(dbName)
+                  }
             }
-        }
-    }
+      }
 
-    @Inject
-    lateinit var executorService: ExecutorService
+      @Inject
+      lateinit var executorService: ExecutorService
 
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setExecutor(executorService)
-            .build()
+      override val workManagerConfiguration: Configuration
+            get() = Configuration.Builder()
+                  .setExecutor(executorService)
+                  .build()
 
 }
 
@@ -72,10 +69,10 @@ class MainApplication : Application(), Configuration.Provider {
 @InstallIn(SingletonComponent::class)
 interface MainEntryPoint {
 
-    fun accountManager(): AccountManager
-    fun applicationEventPublisher(): ApplicationEventPublisher
-    fun retrofit(): Retrofit
-    fun sqlLiteFactory(): SupportSQLiteOpenHelper.Factory
+      fun accountManager(): AccountManager
+      fun applicationEventPublisher(): ApplicationEventPublisher
+      fun retrofit(): Retrofit
+      fun sqlLiteFactory(): SupportSQLiteOpenHelper.Factory
 
 }
 
@@ -83,90 +80,90 @@ interface MainEntryPoint {
 @InstallIn(SingletonComponent::class)
 internal abstract class ApplicationModule {
 
-    @Binds
-    abstract fun context(application: Application): Context
+      @Binds
+      abstract fun context(application: Application): Context
 
-    @Binds
-    abstract fun executor(executorService: ExecutorService): Executor
+      @Binds
+      abstract fun executor(executorService: ExecutorService): Executor
 
-    @Binds
-    abstract fun jobCache(jobCache: NetworkJobDelay): JobDelay
+      @Binds
+      abstract fun jobCache(jobCache: NetworkJobDelay): JobDelay
 
-    companion object {
+      companion object {
 
-        @Provides
-        @Singleton
-        fun executorService(): ExecutorService {
-            return ThreadPoolExecutor(
-                3,
-                max(3.0, (Runtime.getRuntime().availableProcessors() - 1).toDouble()).toInt(),
-                10, TimeUnit.SECONDS,
-                LinkedBlockingQueue()
-            )
-        }
+            @Provides
+            @Singleton
+            fun executorService(): ExecutorService {
+                  return ThreadPoolExecutor(
+                        3,
+                        max(3.0, (Runtime.getRuntime().availableProcessors() - 1).toDouble()).toInt(),
+                        10, TimeUnit.SECONDS,
+                        LinkedBlockingQueue()
+                  )
+            }
 
-        @Singleton
-        @Provides
-        fun gson() = Gson()
+            @Singleton
+            @Provides
+            fun gson() = Gson()
 
-        @Provides
-        @Singleton
-        fun httpClient(executor: ExecutorService, context: Context): OkHttpClient {
-            return OkHttpClient.Builder().dispatcher(
-                Dispatcher(executor)
-            )
-                .cache(Cache(File(context.cacheDir, "http"), 50L * 1024 * 1024))
-                .build()
-        }
+            @Provides
+            @Singleton
+            fun httpClient(executor: ExecutorService, context: Context): OkHttpClient {
+                  return OkHttpClient.Builder().dispatcher(
+                        Dispatcher(executor)
+                  )
+                        .cache(Cache(File(context.cacheDir, "http"), 50L * 1024 * 1024))
+                        .build()
+            }
 
-        @Provides
-        @Singleton
-        fun defaultRetrofit(httpClient: OkHttpClient): Retrofit {
-            return Retrofit.Builder()
-                .baseUrl(SERVER)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
-                .build()
-        }
+            @Provides
+            @Singleton
+            fun defaultRetrofit(httpClient: OkHttpClient): Retrofit {
+                  return Retrofit.Builder()
+                        .baseUrl(SERVER)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(httpClient)
+                        .build()
+            }
 
-    }
+      }
 }
 
 fun Context.createDatabase(account: String): AccountDatabase {
-    val openFactory = EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).sqlLiteFactory()
-    return databaseBuilder(
-        this.applicationContext,
-        AccountDatabase::class.java, "database_$account"
-    ).openHelperFactory(openFactory).build()
+      val openFactory = EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).sqlLiteFactory()
+      return databaseBuilder(
+            this.applicationContext,
+            AccountDatabase::class.java, "database_$account"
+      ).openHelperFactory(openFactory).build()
 }
 
 fun Context.applicationEventPublisher(): ApplicationEventPublisher {
-    return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).applicationEventPublisher()
+      return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).applicationEventPublisher()
 }
 
 fun Context.retrofit(): Retrofit {
-    return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).retrofit()
+      return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).retrofit()
 }
 
 fun Context.accountRepository(): AccountRepository {
-    return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).accountManager()
+      return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).accountManager()
 }
 
 fun Context.currentSession(): Session {
-    return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).accountManager().currentSession!!
+      return EntryPoints.get(this.applicationContext, MainEntryPoint::class.java).accountManager().currentSession!!
 }
 
 fun Context.cacheFile(uri: Uri): File {
-    val cacheDir = File(cacheDir, "temp")
-    if (!cacheDir.exists()) {
-        cacheDir.mkdir()
-    }
-    val tempFile = File(cacheDir, UUID.randomUUID().toString())
-    contentResolver.openInputStream(uri)?.use { fis ->
-        FileOutputStream(tempFile).use { fos ->
-            fis.copyTo(fos)
-        }
-    } ?: throw IOException("Can't read the Uri: $uri")
+      val cacheDir = File(cacheDir, "temp")
+      if (!cacheDir.exists()) {
+            cacheDir.mkdir()
+      }
+      val tempFile = File(cacheDir, UUID.randomUUID().toString())
+      contentResolver.openInputStream(uri)?.use { fis ->
+            FileOutputStream(tempFile).use { fos ->
+                  fis.copyTo(fos)
+            }
+      } ?: throw IOException("Can't read the Uri: $uri")
 
-    return tempFile
+      return tempFile
 }

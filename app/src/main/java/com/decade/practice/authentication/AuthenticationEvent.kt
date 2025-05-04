@@ -1,7 +1,7 @@
 package com.decade.practice.authentication
 
 import com.decade.practice.event.ApplicationEvent
-import com.decade.practice.model.User
+import com.decade.practice.model.domain.User
 import com.decade.practice.session.Session
 
 abstract class AuthenticationEvent(val account: User?) : ApplicationEvent() {
