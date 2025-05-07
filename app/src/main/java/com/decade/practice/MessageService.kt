@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.compose.runtime.Immutable
-import com.decade.practice.message.MessageChannel
 import com.decade.practice.model.domain.ChatEvent
 import com.decade.practice.model.domain.Conversation
 import com.decade.practice.model.domain.IconEvent

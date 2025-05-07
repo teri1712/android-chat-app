@@ -4,7 +4,7 @@ import com.decade.practice.MessageService
 import com.decade.practice.database.AccountDatabase
 import com.decade.practice.endpoints.HttpContext
 import com.decade.practice.model.domain.User
-import com.decade.practice.session.net.OnlineClient
+import com.decade.practice.session.sync.OnlineClient
 import com.decade.practice.session.repository.DialogRepository
 import com.decade.practice.session.repository.EventRepository
 import com.decade.practice.session.repository.MessageRepository

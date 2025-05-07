@@ -3,7 +3,7 @@ package com.decade.practice.authentication
 import android.net.Uri
 import com.decade.practice.model.domain.Account
 import com.decade.practice.model.domain.AccountEntry
-import java.util.Date
+import com.decade.practice.model.dto.SignUpRequest
 
 interface Authenticator {
 
@@ -12,11 +12,7 @@ interface Authenticator {
 
       @Throws(AuthenticationException::class)
       suspend fun signUp(
-            username: String,
-            password: String,
-            fullname: String,
-            gender: String,
-            dob: Date,
+            information: SignUpRequest,
             avatar: Uri?
       )
 

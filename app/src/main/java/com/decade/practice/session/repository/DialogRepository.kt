@@ -2,6 +2,7 @@ package com.decade.practice.session.repository
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.decade.practice.event.ApplicationEvent
@@ -10,8 +11,6 @@ import com.decade.practice.event.ListenableEventPublisher
 import com.decade.practice.model.domain.ChatEvent
 import com.decade.practice.model.domain.ChatIdentifier
 import com.decade.practice.model.domain.Conversation
-import com.decade.practice.model.domain.Online
-import com.decade.practice.model.domain.User
 import com.decade.practice.model.domain.isMessage
 import com.decade.practice.model.presentation.Dialog
 import com.decade.practice.model.presentation.Message
@@ -34,7 +33,7 @@ class PersistentDialog(
       private val eventCache: EventCache
 ) : Dialog {
       override var newest: Message by mutableStateOf(Message)
-      override var onlineAt: Long by mutableStateOf(Long.MIN_VALUE)
+      override var onlineAt: Long by mutableLongStateOf(Long.MIN_VALUE)
       override val messages: List<Message>
             get() = conversation.toMessages(eventCache.get(conversation))
 }
@@ -42,7 +41,6 @@ class PersistentDialog(
 
 @AccountScope
 class DialogRepository @Inject constructor(
-      private val account: User,
       private val chatRepo: ChatRepository,
       private val coroutine: CoroutineScope,
       private val eventCache: EventCache,
@@ -65,43 +63,43 @@ class DialogRepository @Inject constructor(
                   val conversation = snapshot.conversation
                   val dialog = get(conversation)
                   eventCache.save(conversation, snapshot.eventList)
-                  dialog.newest = conversation.toMessages(eventCache.get(conversation)).first()
+                  dialog.newest = conversation.toMessages(
+                        eventCache.get(conversation)
+                  ).first()
                   dialog
             }
 
-      override suspend fun get(index: Conversation): PersistentDialog {
-            var dialog = dialogMap.get(index.identifier)
+      override suspend fun get(conversation: Conversation): PersistentDialog {
+            var dialog = dialogMap.get(conversation.identifier)
             if (dialog == null) {
-                  dialog = PersistentDialog(index, eventCache)
-                  dialogMap.put(index.identifier, dialog)
+                  dialog = PersistentDialog(conversation, eventCache)
+                  dialogMap.put(conversation.identifier, dialog)
             }
-            return dialog
+            return dialog.apply {
+                  val partnerName = conversation.partner.username
+                  coroutine.launch {
+                        onlineAt = onlineRepo.get(partnerName).at
+                  }
+            }
       }
 
 
       override fun supportsEventType(eventType: Class<out ApplicationEvent>): Boolean =
-            eventType.isAssignableFrom(ChatEvent::class.java) || eventType.isAssignableFrom(Online::class.java)
+            eventType.isAssignableFrom(ChatEvent::class.java)
 
       override suspend fun onApplicationEvent(event: ApplicationEvent) {
-            if (event is ChatEvent) {
-
-                  val conversation = event.conversation
-                  val persistent = get(event.conversation)
-                  if (event.isMessage()) {
-                        persistent.newest = conversation.toMessage(event)
-                  } else if (
-                        persistent.newest !== Message &&
-                        persistent.newest.sender == event.sender
-                  ) {
-                        persistent.newest.seenAt = event.seenEvent!!.at
-                  }
-                  coroutine.launch {
-                        onlineRepo.get(conversation.partner.username)
-                  }
-            } else if (event is Online) {
-                  val persistent = dialogMap.get(ChatIdentifier.from(account, event.user))
-                  if (persistent != null)
-                        persistent.onlineAt = event.at
+            val conversation = (event as ChatEvent).conversation
+            val persistent = get(event.conversation)
+            if (event.isMessage()) {
+                  persistent.newest = conversation.toMessage(event)
+            } else if (
+                  persistent.newest !== Message &&
+                  persistent.newest.sender == event.sender
+            ) {
+                  persistent.newest.seenAt = event.seenEvent!!.at
+            }
+            coroutine.launch {
+                  onlineRepo.get(conversation.partner.username)
             }
       }
 

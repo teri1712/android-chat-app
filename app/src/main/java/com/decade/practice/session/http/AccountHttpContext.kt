@@ -1,4 +1,4 @@
-package com.decade.practice.session.net
+package com.decade.practice.session.http
 
 import com.decade.practice.authentication.AuthenticationException
 import com.decade.practice.authentication.NoCredentialException
@@ -27,7 +27,6 @@ import retrofit2.Retrofit
 import java.io.IOException
 import java.net.HttpURLConnection
 import javax.inject.Inject
-import kotlin.concurrent.Volatile
 
 
 private const val HEADER = "Authorization"

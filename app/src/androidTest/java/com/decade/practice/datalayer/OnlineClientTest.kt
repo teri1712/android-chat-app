@@ -2,7 +2,7 @@ package com.decade.practice.datalayer
 
 import com.decade.practice.endpoints.eventCall
 import com.decade.practice.session.AccountRepository
-import com.decade.practice.session.net.ChatSubscription
+import com.decade.practice.session.sync.ChatSubscription
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers

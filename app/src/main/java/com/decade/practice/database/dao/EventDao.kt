@@ -2,6 +2,7 @@ package com.decade.practice.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.decade.practice.model.domain.Chat
 import com.decade.practice.model.domain.ChatEvent
 import com.decade.practice.model.domain.ChatIdentifier
 
@@ -68,3 +69,4 @@ suspend fun EventDao.last(identifier: ChatIdentifier): ChatEvent? {
 suspend fun EventDao.count(chatIdentifier: ChatIdentifier): Int = count(chatIdentifier.firstUser, chatIdentifier.secondUser)
 
 
+suspend fun EventDao.list(chat: Chat, time: Long, limit: Int = 40): List<ChatEvent> = list(chat.identifier.firstUser, chat.identifier.secondUser, time, limit)

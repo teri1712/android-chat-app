@@ -1,4 +1,4 @@
-package com.decade.practice.session.net
+package com.decade.practice.session.sync
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import com.decade.practice.INBOUND_CHANNEL
 import com.decade.practice.endpoints.HttpContext
-import com.decade.practice.message.MessageChannel
+import com.decade.practice.MessageChannel
 import com.decade.practice.model.domain.Chat
 import com.decade.practice.model.domain.ChatEvent
 import com.decade.practice.model.domain.TypeEvent

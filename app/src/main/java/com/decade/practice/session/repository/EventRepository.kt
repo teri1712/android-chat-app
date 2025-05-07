@@ -3,6 +3,7 @@ package com.decade.practice.session.repository
 import com.decade.practice.database.AccountDatabase
 import com.decade.practice.database.dao.count
 import com.decade.practice.database.dao.last
+import com.decade.practice.database.dao.list
 import com.decade.practice.database.saveEvents
 import com.decade.practice.endpoints.HttpContext
 import com.decade.practice.endpoints.eventCall
@@ -24,24 +25,34 @@ class EventRepository @AssistedInject constructor(
       private val eventCache: EventCache,
       remoteRepoFactory: RemoteEventRepository.Factory,
 ) : ListRepository<ChatEvent, Long> {
-      private val remoteRepo: RemoteEventRepository = remoteRepoFactory.create(conversation)
+      private val remoteRepo: RemoteEventRepository =
+            remoteRepoFactory.create(conversation)
 
       private val eventDao = database.eventDao()
+
       override suspend fun list(time: Long?): List<ChatEvent> {
             val chat = conversation.chat
             var events = eventDao.list(
-                  chat.identifier.firstUser,
-                  chat.identifier.secondUser,
+                  chat,
                   time ?: Long.MAX_VALUE,
                   DEFAULT_PAGE_LIMIT
             )
             if (events.size < DEFAULT_PAGE_LIMIT) {
                   val at = events.lastOrNull()
-                  events = events + remoteRepo.list(at?.eventVersion)
+                  val extraList = remoteRepo.list(at?.eventVersion)
+                  if (at != null) {
+                        events = events + extraList
+                  } else {
+                        events = eventDao.list(
+                              chat,
+                              time ?: Long.MAX_VALUE,
+                              DEFAULT_PAGE_LIMIT
+                        )
+                  }
             }
             return events.apply {
-                  forEach {
-                        it.conversation = conversation
+                  forEach { event ->
+                        event.conversation = conversation
                   }
                   eventCache.save(conversation, this)
             }

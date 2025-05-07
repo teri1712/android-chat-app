@@ -1,7 +1,5 @@
 package com.decade.practice
 
-import com.decade.practice.message.ListenableMessageChannel
-import com.decade.practice.message.MessageChannel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,7 +14,7 @@ const val OUTBOUND_CHANNEL = "OUTBOUND_CHANNEL"
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class MessagingModule {
+abstract class MessageModule {
 
       @Binds
       @Named(INBOUND_CHANNEL)

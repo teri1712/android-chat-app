@@ -123,11 +123,9 @@ class AccountManager @Inject constructor(
                   "No session active"
             }
             val session = (accountSession as AccountSession)
-            // TODO: Atomic
-            session.close()
             val account = session.database.getAccount()
             authenticator.signOut(account)
-            application.deleteDatabase("database_${account.username}")
+            session.close()
             onAccountLoggedOut(session)
       }
 
@@ -138,6 +136,7 @@ class AccountManager @Inject constructor(
       }
 
       private fun onAccountLoggedOut(session: AccountSession) {
+            application.deleteDatabase("database_${session.account.username}")
             accountSession = null
             preferencesStore.currentAccount = null
             eventPublisher.publish(LogoutEvent(session))

@@ -1,4 +1,4 @@
-package com.decade.practice.message
+package com.decade.practice
 
 import com.decade.practice.model.domain.ChatEvent
 

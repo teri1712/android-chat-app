@@ -30,7 +30,7 @@ interface ImageProvider {
 }
 
 @Singleton
-class ImageInitializer @Inject constructor(
+class ImageProviderImpl @Inject constructor(
       private val context: Context,
       private val defaultClient: OkHttpClient,
       private val defaultRetrofit: Retrofit
@@ -82,10 +82,10 @@ class ImageInitializer @Inject constructor(
 internal abstract class PicassoModule {
 
       @Binds
-      abstract fun picassoProvider(picasso: ImageInitializer): ImageProvider
+      abstract fun imageProvider(imageProvider: ImageProviderImpl): ImageProvider
 
       @Binds
       @IntoSet
-      abstract fun applicationEventListener(picasso: ImageInitializer): ApplicationEventListener
+      abstract fun applicationEventListener(imageProvider: ImageProviderImpl): ApplicationEventListener
 
 }
